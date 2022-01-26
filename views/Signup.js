@@ -35,7 +35,7 @@ export default SignupScreen = ({ navigation }) => {
     };
 
     return (
-        <Layout style={styles.pageLayout1}>
+        <Layout style={styles.pageLayout1} level="4">
             <Text category="h1" style={GlobalStyle.pageTitle}>הירשם</Text>
             <View>
                 <Input placeholder="אימייל" value={email}

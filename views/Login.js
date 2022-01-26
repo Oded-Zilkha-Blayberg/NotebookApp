@@ -59,7 +59,7 @@ export default LoginScreen = ({ navigation }) => {
     );
 
     return (
-        <Layout style={styles.pageLayout}>
+        <Layout style={styles.pageLayout} level="4">
             <Text category="h1" style={GlobalStyle.pageTitle}>התחבר</Text>
             <View>
                 <Input placeholder="אימייל" value={email}
