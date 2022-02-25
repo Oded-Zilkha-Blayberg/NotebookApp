@@ -1,8 +1,9 @@
 import React from "react";
 import { StyleSheet, View } from 'react-native';
-import { Button, Modal, Card, Input } from '@ui-kitten/components';
+import { Button, Modal, Card, Input, Text, List, ListItem, Divider } from '@ui-kitten/components';
 import DatetimePicker from '../components/DatetimePicker';
 import BottomSheet from "./BottomSheet";
+import { hebrewDateAndMonthShort } from '../formats/dateForamt';
 
 export default class AddTaskBottomSheet extends BottomSheet {
     constructor(props) {
@@ -21,11 +22,21 @@ export default class AddTaskBottomSheet extends BottomSheet {
     }
 
     updateNewTaskTitel = (title) => {
-        this.setState({
+        this.setState(prevState => ({
             newTask: {
-                title: title,
+                ...prevState.newTask,
+                title,
             },
-        });
+        }));
+    }
+
+    updateNewTaskDatetime = (datetime) => {
+        this.setState(prevState => ({
+            newTask: {
+                ...prevState.newTask,
+                datetime,
+            },
+        }));
     }
 
     saveTask = () => {
@@ -49,6 +60,12 @@ export default class AddTaskBottomSheet extends BottomSheet {
                 <Card
                 disabled={true}
                 style={styles.modalCard}>
+                    {/* <Text>aaa</Text>
+                    {this.state.newTask.datetime ?
+                    <ListItem
+                    title={hebrewDateAndMonthShort(this.state.newTask.datetime)}
+                    /> : null
+                    } */}
                     <Input
                     placeholder="מטלה"
                     autoFocus
@@ -58,6 +75,7 @@ export default class AddTaskBottomSheet extends BottomSheet {
                     <View style={styles.actionsBar}>
                         <DatetimePicker
                         screenShortHeight={this.state.screenShortHeight}
+                        save={this.updateNewTaskDatetime}
                         />
                         <Button
                         size="small"

@@ -22,6 +22,7 @@ export default {
             "supportsTablet": true
         },
         "android": {
+            package: "com.notebook.notebookapp",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"
