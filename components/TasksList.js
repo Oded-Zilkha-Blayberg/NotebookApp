@@ -41,8 +41,10 @@ class TasksListComponent extends React.Component {
         ];
     };
 
-    renderSectionTitle = (title) => (
+    renderSectionTitle = (title, data) => (
+        data.length ?
         <Text category="h6" style={[styles.sectionTitle, {backgroundColor: this.props.theme['background-basic-color-4']}]}>{title}</Text>
+        : null
     );
 
     renderItem = (info) => (
@@ -56,8 +58,8 @@ class TasksListComponent extends React.Component {
                 sections={this.state.tasksBySections}
                 keyExtractor={(item, index) => item + index}
                 renderItem={this.renderItem}
-                renderSectionHeader={({section: {title}}) => this.renderSectionTitle(title)}
-                style={styles.contentContainer}
+                renderSectionHeader={({section: {title, data}}) => this.renderSectionTitle(title, data)}
+                contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
                 stickySectionHeadersEnabled={true}
                 overScrollMode="never"
@@ -73,6 +75,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
     },
     contentContainer: {
+        paddingBottom: 100,
     },
     sectionTitle: {
         paddingTop: 16,

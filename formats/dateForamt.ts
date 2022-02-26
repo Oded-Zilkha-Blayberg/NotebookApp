@@ -23,8 +23,33 @@ export function hebrewDateAndMonthShort(date:Date) {
     return `${date.getDate()} ב${getMonthShortNameInHebrew(date)}`
 }
 
+export function hebrewDateAndMonthLong(date:Date) {
+    return `${date.getDate()} ב${getMonthNameInHebrew(date)}`
+}
+
 export function hourAndMinutesString(date:Date) {
     return `${("0" + date.getHours().toString()).slice(-2)}:${("0" + date.getMinutes().toString()).slice(-2)}`;
+}
+
+export function shortDatetimeString(date:Date) {
+    const dateString = shortDateString(date);
+    return `${dateString}${dateString ? ", " : ""}${hourAndMinutesString(date)}`;
+};
+
+export function shortDateString(date:Date) {
+    if (isToday(date)) {
+        return "";
+    } else if (isTomorrow(date)) {
+        return "מחר";
+    } else if (isInCurrentYear(date)) {
+        return hebrewDateAndMonthLong(date);
+    } else {
+        return `${hebrewDateAndMonthLong(date)} ${date.getFullYear()}`;
+    }
+};
+
+export function isInCurrentYear(date:Date) {
+    return (new Date()).getFullYear() == date.getFullYear();
 }
 
 export function isToday(date:Date, today:Date = new Date()) {
@@ -91,7 +116,8 @@ export function getMonthNameInHebrew(date:Date) {
 };
 
 export function getMonthShortNameInHebrew(date:Date) {
-    return `${getMonthNameInHebrew(date).slice(0, 3)}'`;
+    const monthName = getMonthNameInHebrew(date);
+    return `${monthName.slice(0, 3)}${monthName.length > 3 ? "'" : ""}`;
 };
 
 export function getWeekDayNameInHebrew(date:Date) {

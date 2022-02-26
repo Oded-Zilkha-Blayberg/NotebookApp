@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from 'react-native';
-import { Text, Button, Icon, Modal, Card, List, ListItem } from '@ui-kitten/components';
-import { hebrewDateOnlyString, hebrewDateAndMonthShort } from "../formats/dateForamt";
+import { Text, Button, Icon, Modal, Card } from '@ui-kitten/components';
 import DatePicker from 'react-native-date-picker-bugfix';
 
 const ClockIcon = (props) => (
@@ -14,14 +13,14 @@ export default class DatetimePicker extends React.Component {
 
         this.state = {
             showModal: false,
-            selectedDate: new Date(),
+            selectedDate: null,
         };
     }
 
     openPicker = () => {
         this.setState({
             showModal: true,
-            selectedDate: new Date(),
+            selectedDate: this.props.selectedDate || new Date(),
         });
     }
 
@@ -43,7 +42,7 @@ export default class DatetimePicker extends React.Component {
                 size="small"
                 appearance="outline"
                 accessoryLeft={ClockIcon}
-                onPress={this.openPicker}
+                onPress={() => this.openPicker()}
                 />
 
                 {/* <DatePicker
@@ -67,11 +66,7 @@ export default class DatetimePicker extends React.Component {
                 backdropStyle={styles.backdrop}
                 onBackdropPress={this.closePicker}>
                     <Card disabled={true} style={styles.modalCard}>
-                        <Text style={{fontSize: 20}}>
-                            {hebrewDateOnlyString(new Date(this.state.selectedDate))}
-                            {", " + (new Date(this.state.selectedDate)).getHours()
-                            + ":" + (new Date(this.state.selectedDate)).getMinutes()}
-                        </Text>
+                        <Text style={{fontSize: 20}}>בחר תאריך</Text>
                         <View style={styles.listsView}>
                             <DatePicker
                             date={this.state.selectedDate}

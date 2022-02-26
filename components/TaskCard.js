@@ -22,8 +22,9 @@ export default TaskCard = (info) => {
                         />
                     </View>
                 </TouchableWithoutFeedback>
-                <View style={{flexDirection: "column", paddingVertical: 20, paddingHorizontal: 10}}>
-                    <Text category="h6">
+                <View style={{flexDirection: "column", paddingVertical: 20, paddingHorizontal: 10, flex: 1, alignItems: "flex-start"}}>
+                    <Text category="h6" numberOfLines={2} ellipsizeMode="tail"
+                    style={{flex: 1, flexDirection: "row", paddingLeft: 10, direction: "rtl"}}>
                         {info.item.title}
                     </Text>
                     { info.item.datetime && hebrewDateString(new Date(info.item.datetime))
