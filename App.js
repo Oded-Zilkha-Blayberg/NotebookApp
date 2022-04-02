@@ -3,9 +3,11 @@ import * as eva from '@eva-design/eva';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
+import { useColorScheme } from 'react-native';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import { ThemeContext, Theme } from './theme/themeContext';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { default as theme } from './theme/theme.json';
+import { default as customTheme } from './theme/theme.json';
 import { default as mapping } from './mapping.json';
 
 import Routes from './navigation/index';
@@ -21,6 +23,13 @@ const loadFonts = () => {
 
 export default () => {
     const [fontsLoaded, setFontsLoaded] = React.useState(false);
+    const [theme, setTheme] = React.useState(Theme.SYSTEM);
+
+    const colorScheme = useColorScheme();
+
+    const changeTheme = (nextTheme) => {
+        setTheme(nextTheme);
+    };
 
     if (!fontsLoaded) {
         return <AppLoading startAsync={loadFonts}
@@ -30,10 +39,19 @@ export default () => {
     return (
         <>
             <IconRegistry icons={EvaIconsPack} />
-            <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }} customMapping={mapping}>
-                <StatusBar style="light" />
-                <Routes />
-            </ApplicationProvider>
+            <ThemeContext.Provider value={{ theme, changeTheme }}>
+                <ApplicationProvider
+                {...eva}
+                theme={{ ...eva[theme.value || colorScheme], ...customTheme }}
+                customMapping={mapping}
+                >
+                    <StatusBar
+                    style={theme.value === Theme.LIGHT.value || colorScheme === Theme.LIGHT.value
+                    ? 'dark' : 'light'}
+                    />
+                    <Routes />
+                </ApplicationProvider>
+            </ThemeContext.Provider>
         </>
     );
 };

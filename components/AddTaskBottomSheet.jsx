@@ -1,21 +1,31 @@
 import React from "react";
 import { StyleSheet, View } from 'react-native';
-import { Button, Modal, Card, Input, Text, List, ListItem, Divider, Icon } from '@ui-kitten/components';
-import DatetimePicker from '../components/DatetimePicker';
+import { Button, Modal, Card, Input, Text, ListItem, Icon, useTheme } from '@ui-kitten/components';
+import DatetimePicker from './DatetimePicker';
 import BottomSheet from "./BottomSheet";
 import { shortDatetimeString } from '../formats/dateForamt';
+import themeColors from '../theme/theme.json';
 
 const ClockIcon = (props) => (
     <Icon {...props} name='clock-outline'/>
 );
 
-export default class AddTaskBottomSheet extends BottomSheet {
+export default AddTaskBottomSheet = (props) => {
+    const theme = useTheme();
+
+    return (
+        <AddTaskBottomSheetComponent {...props} theme={theme} />
+    );
+};
+
+class AddTaskBottomSheetComponent extends BottomSheet {
     constructor(props) {
         super(props);
         this.state = {
             newTask: {
                 title: "",
                 datetime: null,
+                important: false,
             },
             modalHeight: 130,
         };
@@ -56,6 +66,15 @@ export default class AddTaskBottomSheet extends BottomSheet {
         }));
     }
 
+    updateNewTaskImportant = () => {
+        this.setState(prevState => ({
+            newTask: {
+                ...prevState.newTask,
+                important: !prevState.newTask.important,
+            }
+        }));
+    }
+
     saveTask = () => {
         this.props.saveTask(this.state.newTask);
         this.closeBottomSheet();
@@ -67,6 +86,7 @@ export default class AddTaskBottomSheet extends BottomSheet {
             newTask: {
                 title: "",
                 datetime: null,
+                important: false,
             },
             modalHeight: 130,
         });
@@ -110,15 +130,26 @@ export default class AddTaskBottomSheet extends BottomSheet {
                     value={this.state.newTask.title}
                     onChangeText={this.updateNewTaskTitel}
                     />
-                    <View style={styles.actionsBar}>
-                        <DatetimePicker
-                        screenShortHeight={this.state.screenShortHeight}
-                        save={this.updateNewTaskDatetime}
-                        ref={this.datetimePicker}
-                        selectedDate={this.state.newTask.datetime}
-                        />
+                    <View style={[styles.actionsBar, {paddingTop: 16}]}>
+                        <View style={styles.actionsBar}>
+                            <DatetimePicker
+                            screenShortHeight={this.state.screenShortHeight}
+                            save={this.updateNewTaskDatetime}
+                            ref={this.datetimePicker}
+                            selectedDate={this.state.newTask.datetime}
+                            actionIconStyle={styles.actionIcon}
+                            theme={this.props.theme}
+                            />
+                            <Icon
+                            name="alert-circle-outline"
+                            fill={this.state.newTask.important ? themeColors['color-warning-500'] : this.props.theme['text-hint-color'] }
+                            style={[styles.actionIcon, {marginStart: 10}]}
+                            onPress={this.updateNewTaskImportant}
+                            />
+                        </View>
                         <Button
                         size="small"
+                        disabled={!this.state.newTask.title && !this.state.newTask.datetime}
                         onPress={this.saveTask}>
                             שמור
                         </Button>
@@ -139,7 +170,6 @@ const styles = StyleSheet.create({
     actionsBar: {
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingTop: 16,
     },
     modal: {
         width: "100%",
@@ -148,5 +178,9 @@ const styles = StyleSheet.create({
     selectedDateListItem: {
         paddingHorizontal: 0,
         paddingTop: 0,
+    },
+    actionIcon: {
+        height: 25,
+        width: 25,
     },
 })

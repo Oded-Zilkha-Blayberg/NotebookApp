@@ -18,6 +18,13 @@ export default {
         "assetBundlePatterns": [
             "**/*"
         ],
+        notification: {
+            icon: "https://icons-for-free.com/iconfiles/png/512/notification+remind+reminder+ring+ringing+schedule+sound+icon-1320168708857990942.png",
+            color: "#ffffff",
+            //sounds: ["./local/assets/notification-sound.wav",]
+            androidMode: "collapse",
+            androidCollapsedTitle: "#{unread_notifications} תזכורות",
+        },
         "ios": {
             "supportsTablet": true
         },
@@ -35,6 +42,9 @@ export default {
         "web": {
             "favicon": "./assets/favicon.png"
         },
+        plugins: [
+            "@react-native-firebase/app",
+        ],
         extra: {
             apiKey: process.env.API_KEY,
             authDomain: process.env.AUTH_DOMAIN,

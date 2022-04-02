@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableWithoutFeedback } from 'react-native';
 import { Layout, Text, Button, Icon, Input } from '@ui-kitten/components';
 import GlobalStyle from '../theme/GlobalStyle';
 import HebrewAuthError from '../valueSets/AuthError-HE';
@@ -35,39 +35,34 @@ export default SignupScreen = ({ navigation }) => {
     };
 
     return (
-        <Layout style={styles.pageLayout1} level="4">
-            <Text category="h1" style={GlobalStyle.pageTitle}>הירשם</Text>
-            <View>
-                <Input placeholder="אימייל" value={email}
-                onChangeText={nextValue => setEmail(nextValue)}
-                style={{width: "100%", paddingVertical: "5%"}} textAlign="right"/>
-                
-                <Input placeholder="סיסמא" value={password}
-                onChangeText={nextValue => setPassword(nextValue)}
-                style={{width: "100%", paddingVertical: "5%"}} textAlign="right"
-                accessoryRight={renderIcon} secureTextEntry={secureTextEntry}/>
+        <Layout style={GlobalStyle.container} level="4">
+            <View style={GlobalStyle.header}>
+                <Text category="h1" style={GlobalStyle.pageTitle}>הירשם</Text>
+            </View>
+            <View style={[GlobalStyle.body, {justifyContent: "center"}]}>
+                <View style={GlobalStyle.bodyItem}>
+                    <Input placeholder="אימייל" value={email}
+                    onChangeText={nextValue => setEmail(nextValue)}
+                    style={{width: "100%", paddingVertical: "5%"}} textAlign="right"/>
+                    
+                    <Input placeholder="סיסמא" value={password}
+                    onChangeText={nextValue => setPassword(nextValue)}
+                    style={{width: "100%", paddingVertical: "5%"}} textAlign="right"
+                    accessoryRight={renderIcon} secureTextEntry={secureTextEntry}/>
 
-                {signupError ? <Text category="s1" status="warning">{signupError}</Text> : null}
-            </View>
-            <View>
-                <Button onPress={onSignup}>הירשם</Button>
-            </View>
-            <View>
-                <Text>אתה כבר רשום לאפליקציה? <Text status="primary"
-                                                onPress={() => navigation.navigate('Login')}>
-                                                    התחבר
-                                                </Text>
-                </Text>
+                    {signupError ? <Text category="s1" status="warning">{signupError}</Text> : null}
+                </View>
+                <View style={GlobalStyle.bodyItem}>
+                    <Button onPress={onSignup}>הירשם</Button>
+                </View>
+                <View style={GlobalStyle.bodyItem}>
+                    <Text>אתה כבר רשום לאפליקציה? <Text status="primary"
+                                                    onPress={() => navigation.navigate('Login')}>
+                                                        התחבר
+                                                    </Text>
+                    </Text>
+                </View>
             </View>
         </Layout>
     );
 };
-
-const styles = StyleSheet.create({
-    pageLayout1: {
-        flex: 1,
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        paddingHorizontal: "5%",
-    },
-});

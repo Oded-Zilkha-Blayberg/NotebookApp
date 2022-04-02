@@ -1,11 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from 'react-native';
 import { Text, Button, Icon, Modal, Card } from '@ui-kitten/components';
-import DatePicker from 'react-native-date-picker-bugfix';
-
-const ClockIcon = (props) => (
-  <Icon {...props} name='clock-outline'/>
-);
+import DatePicker from '@oded-zilkha-blayberg/react-native-date-picker';
 
 export default class DatetimePicker extends React.Component {
     constructor(props) {
@@ -38,28 +34,12 @@ export default class DatetimePicker extends React.Component {
     render() {
         return (
             <View>
-                <Button
-                size="small"
-                appearance="outline"
-                accessoryLeft={ClockIcon}
+                <Icon
+                name="clock-outline"
+                fill={this.props.theme['text-hint-color']}
+                style={this.props.actionIconStyle}
                 onPress={() => this.openPicker()}
                 />
-
-                {/* <DatePicker
-                modal
-                open={this.state.showModal}
-                onConfirm={() => this.setState((state, props) => ({showModal: !state.showModal}))}
-                onCancel={() => this.setState((state, props) => ({showModal: !state.showModal}))}
-                date={this.state.selectedDate}
-                mode="time"
-                androidVariant="iosClone"
-                locale="he"
-                minimumDate={new Date()}
-                onDateChange={(date) => this.setState({selectedDate: date})}
-                fadeToColor="none"
-                //textColor="#ffffff"
-                /> */}
-                
                 <Modal
                 style={[styles.modal, {top: this.props.screenShortHeight - styles.modal.height}]}
                 visible={this.state.showModal}
@@ -76,7 +56,7 @@ export default class DatetimePicker extends React.Component {
                             minimumDate={new Date()}
                             onDateChange={(date) => this.setState({selectedDate: date})}
                             fadeToColor="none"
-                            textColor="#ffffff"
+                            textColor={this.props.theme['text-basic-color']}
                             is24hourSource="device"
                             />
                         </View>
@@ -87,7 +67,10 @@ export default class DatetimePicker extends React.Component {
                             onPress={this.closePicker}>
                                 ביטול
                             </Button>
-                            <Text appearance="hint" style={{textAlignVertical: "center", fontSize: 20}}>|</Text>
+                            <Text
+                            appearance="hint"
+                            style={{textAlignVertical: "center", fontSize: 20}}
+                            >|</Text>
                             <Button
                             size="medium"
                             appearance="ghost"

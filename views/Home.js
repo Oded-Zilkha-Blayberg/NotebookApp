@@ -1,10 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Text, Button, Layout, Icon, Modal, Card, Input } from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
+import { Button, Layout, Icon } from '@ui-kitten/components';
 //import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import TasksList from '../components/TasksList';
 import TopMenu from '../components/TopMenu';
 import AddTaskBottomSheet from '../components/AddTaskBottomSheet';
+
+import Task from '../managers/tasks/Task';
+import { getAllTasks } from '../managers/tasks/TasksManager';
+import GlobalStyle from '../theme/GlobalStyle';
 
 const PlusIcon = (props) => (
   <Icon {...props} name='plus'/>
@@ -14,21 +18,16 @@ export default class HomeScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        getAllTasks();
 
-        let data = new Array(8).fill({
-            title: "פריט",
-            datetime: null,
-            checked: false,
-            creationTime: Date.now(),
-            lastUpdateTime: Date.now(),
-        });
-        
-        data.push({title: "להתקשר למכללה למנהל", datetime: 1642886826464, checked: false, creationTime: Date.now(), lastUpdateTime: Date.now()});
-        data.push({title: "דוח 1", datetime: 11142886861740, checked: false, creationTime: Date.now(), lastUpdateTime: Date.now()});
-        data.push({title: "להתקשר למוסך", datetime: 1643016264253, checked: false, important: true, creationTime: Date.now(), lastUpdateTime: Date.now()});
-        data.push({title: "תזכורת", datetime: 1643103353481, checked: false, creationTime: Date.now(), lastUpdateTime: Date.now()});
-        data.push({title: "להתקשר ל... 23 בינואר", datetime: 1642973386409, checked: false, creationTime: Date.now(), lastUpdateTime: Date.now()});
-        data.push({title: "בדיקת קורונה", datetime: 1643204716333, checked: false, creationTime: Date.now(), lastUpdateTime: Date.now()});
+        let data = new Array(8).fill(new Task());
+
+        data.push(new Task("להתקשר למכללה למנהל", 1642886826464, true));
+        data.push(new Task("להתקשר ל... 23 בינואר", 1642973386409));
+        data.push(new Task("להתקשר למוסך", Date.now() + 20000000));
+        data.push(new Task("בדיקת קורונה", Date.now() + 86400000, true));
+        data.push(new Task("להתקשר ל...", Date.now() + 172800000));
+        data.push(new Task("דוח 1", 11142886861740));
 
         data.sort((currentTask, nextTask) => currentTask.datetime && (currentTask.datetime > nextTask.datetime));
 
@@ -41,13 +40,7 @@ export default class HomeScreen extends React.Component {
     
     addNewTask = (newTask) => {
         this.setState({
-            tasks: [...this.state.tasks, {
-                title: newTask.title,
-                checked: false,
-                datetime: newTask.datetime,
-                creationTime: Date.now(),
-                lastUpdateTime: Date.now(),
-            }],
+            tasks: [...this.state.tasks, new Task(newTask.title, newTask.datetime, newTask.important)],
             updateTasksList: true,
         });
 
@@ -64,8 +57,9 @@ export default class HomeScreen extends React.Component {
 
     render() {
         return (
-            <Layout style={styles.container} level="4">
+            <Layout style={GlobalStyle.container} level="4">
                 <TopMenu
+                navigation={this.props.navigation}
                 />
                 <TasksList
                 data={this.state.tasks}
@@ -86,65 +80,7 @@ export default class HomeScreen extends React.Component {
     };
 };
 
-// export default HomeScreen = () => {
-//     const [showModal, setShowModal] = React.useState(false);
-//     const [taskTitel, setTaskTitel] = React.useState('');
-
-//     let [data, setData] = React.useState([]);
-
-//     data.push({title: "להתקשר למכללה למנהל", datetime: 1642886826464, checked: false,});
-//     data.push({title: "דוח 1", datetime: 11142886861740, checked: false,});
-//     data.push({title: "להתקשר למוסך", datetime: 1643016264253, checked: false, important: true,});
-//     data.push({title: "תזכורת", datetime: 1643103353481, checked: false,});
-//     data.push({title: "להתקשר ל... 23 בינואר", datetime: 1642973386409, checked: false,});
-
-//     data = [...data, ...(new Array(8).fill({
-//         title: "פריט",
-//         datetime: null,
-//         checked: false,
-//     }))];
-
-//     data.sort((currentTask, nextTask) => currentTask.datetime && (currentTask.datetime > nextTask.datetime));
-
-//     const { user } = React.useContext(AuthenticatedUserContext);
-
-//     const addNewTask = () => {
-//         console.log("aaaaaaaaaaaaaaaaaaa")
-//         data.push({title: taskTitel, datetime: (new Date()).getTime()});
-//         console.log(data)
-//     };
-
-//     return (
-//         <Layout style={styles.container} level="4">
-//             <TopMenu/>
-//             {/* <View style={styles.row}>
-//                 <Text style={styles.title}>Welcome {user.email}!</Text>
-//             </View>
-//             <Text style={styles.text}>Your UID is: {user.uid}</Text> */}
-//             <TasksList data={data}/>
-//             <Button style={styles.floatActionButton} accessoryLeft={PlusIcon} onPress={() => setShowModal(!showModal)} />
-
-//             <Modal
-//             style={{width: "100%", position: "absolute", top: "70%", height: "30%"}}
-//             visible={showModal}
-//             backdropStyle={styles.backdrop}
-//             onBackdropPress={() => setShowModal(!showModal)}>
-//                 <Card disabled={true} style={styles.modalCard}>
-//                     <Input placeholder="מטלה" value={taskTitel} onChangeText={nextValue => setTaskTitel(nextValue)} />
-//                     <View style={{flexDirection: "row", justifyContent: "flex-end", paddingTop: 16}}>
-//                         <Button size="small" onPress={addNewTask}>שמור</Button>
-//                     </View>
-//                 </Card>
-//             </Modal>
-//         </Layout>
-//     );
-// };
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 50,
-    },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',

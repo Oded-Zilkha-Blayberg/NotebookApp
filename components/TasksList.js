@@ -3,6 +3,7 @@ import { StyleSheet, SectionList, SafeAreaView } from 'react-native';
 import { Text, useTheme } from '@ui-kitten/components';
 import TaskCard from './TaskCard';
 import { isTimeOver, isToday, isTomorrow, isInMoreXDaysOrMore } from '../formats/dateForamt';
+import GlobalStyle from '../theme/GlobalStyle';
 
 export default TasksList = (props) => {
     const theme = useTheme();
@@ -31,35 +32,46 @@ class TasksListComponent extends React.Component {
     };
 
     updateTasks = () => {
+        const data = this.props.data.sort((currTask, nextTask) => currTask.datetime < nextTask.datetime);
         return [
-            {title: "אחרי המועד", data: this.props.data.filter(task => !task.checked && task.datetime && isTimeOver(new Date(task.datetime)))},
-            {title: "היום", data: this.props.data.filter(task => !task.checked && task.datetime && isToday(new Date(task.datetime)) && !isTimeOver(new Date(task.datetime)))},
-            {title: "מחר", data: this.props.data.filter(task => !task.checked && task.datetime && isTomorrow(new Date(task.datetime)))},
-            {title: "מאוחר יותר", data: this.props.data.filter(task => !task.checked && isInMoreXDaysOrMore(new Date(task.datetime), 2))},
-            {title: "ללא תאריך", data: this.props.data.filter(task => !task.checked && !task.datetime)},
-            {title: "הושלם", data: this.props.data.filter(task => task.checked)},
+            {title: "אחרי המועד", data: data.filter(task => !task.checked && task.datetime && isTimeOver(new Date(task.datetime)))},
+            {title: "היום", data: data.filter(task => !task.checked && task.datetime && isToday(new Date(task.datetime)) && !isTimeOver(new Date(task.datetime)))},
+            {title: "מחר", data: data.filter(task => !task.checked && task.datetime && isTomorrow(new Date(task.datetime)))},
+            {title: "מאוחר יותר", data: data.filter(task => !task.checked && isInMoreXDaysOrMore(new Date(task.datetime), 2))},
+            {title: "ללא תאריך", data: data.filter(task => !task.checked && !task.datetime)},
+            {title: "הושלם", data: data.filter(task => task.checked)},
         ];
     };
 
+    checkTask = () => {
+        this.setState({
+            tasksBySections: this.updateTasks(),
+        })
+    }
+
     renderSectionTitle = (title, data) => (
         data.length ?
-        <Text category="h6" style={[styles.sectionTitle, {backgroundColor: this.props.theme['background-basic-color-4']}]}>{title}</Text>
+        <Text
+        category="h6"
+        appearance="hint"
+        style={[GlobalStyle.subtitle, {backgroundColor: this.props.theme['background-basic-color-4']}]}
+        >{title}</Text>
         : null
     );
 
     renderItem = (info) => (
-        <TaskCard {...info}></TaskCard>
+        <TaskCard {...info} check={this.checkTask}></TaskCard>
     );
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView>
                 <SectionList
                 sections={this.state.tasksBySections}
                 keyExtractor={(item, index) => item + index}
                 renderItem={this.renderItem}
                 renderSectionHeader={({section: {title, data}}) => this.renderSectionTitle(title, data)}
-                contentContainerStyle={styles.contentContainer}
+                contentContainerStyle={[GlobalStyle.bodyItem, styles.contentContainer]}
                 showsVerticalScrollIndicator={false}
                 stickySectionHeadersEnabled={true}
                 overScrollMode="never"
@@ -70,15 +82,7 @@ class TasksListComponent extends React.Component {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginHorizontal: 16,
-    },
     contentContainer: {
-        paddingBottom: 100,
-    },
-    sectionTitle: {
-        paddingTop: 16,
-        paddingBottom: 6,
+        paddingBottom: 150,
     },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import Constants from 'expo-constants';
-import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
-import { Layout, Text, Button, Icon, Input } from '@ui-kitten/components';
+import { View, TouchableWithoutFeedback } from 'react-native';
+import { Layout, Text, Button, Icon, Input, useTheme } from '@ui-kitten/components';
 import GlobalStyle from '../theme/GlobalStyle';
 import HebrewAuthError from '../valueSets/AuthError-HE';
 import Firebase from '../config/firebase';
@@ -20,6 +20,8 @@ const GoogleIcon = (props) => (
 WebBrowser.maybeCompleteAuthSession();
 
 export default LoginScreen = ({ navigation }) => {
+    const theme = useTheme();
+
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [loginError, setLoginError] = React.useState('');
@@ -59,45 +61,54 @@ export default LoginScreen = ({ navigation }) => {
     );
 
     return (
-        <Layout style={styles.pageLayout} level="4">
-            <Text category="h1" style={GlobalStyle.pageTitle}>התחבר</Text>
-            <View>
-                <Input placeholder="אימייל" value={email}
-                onChangeText={nextValue => setEmail(nextValue)}
-                style={{width: "100%", paddingVertical: "5%"}} textAlign="right"/>
-                
-                <Input placeholder="סיסמא" value={password}
-                onChangeText={nextValue => setPassword(nextValue)}
-                style={{width: "100%", paddingVertical: "5%"}} textAlign="right"
-                accessoryRight={renderIcon} secureTextEntry={secureTextEntry}/>
+        <Layout style={[GlobalStyle.container, {backgroundColor: theme['text-basic-color']}]} level="4">
+            <View style={[GlobalStyle.header, {marginBottom: 30}]}>
+                <Text
+                category="h1"
+                style={[GlobalStyle.pageTitle, {color: theme['background-basic-color-4']}]}
+                >התחבר</Text>
+            </View>
+            <View
+            style={
+                [GlobalStyle.body,
+                {
+                    justifyContent: "center",
+                    // borderTopLeftRadius: 50,
+                    // borderTopRightRadius: 50,
+                    borderRadius: 25,
+                    margin: 5,
+                    backgroundColor: theme['background-basic-color-4'],
+                }
+            ]}>
+                <View style={GlobalStyle.bodyItem}>
+                    <Input placeholder="אימייל" value={email}
+                    onChangeText={nextValue => setEmail(nextValue)}
+                    style={{width: "100%", paddingVertical: "5%"}} textAlign="right"/>
+                    
+                    <Input placeholder="סיסמא" value={password}
+                    onChangeText={nextValue => setPassword(nextValue)}
+                    style={{width: "100%", paddingVertical: "5%"}} textAlign="right"
+                    accessoryRight={renderIcon} secureTextEntry={secureTextEntry}/>
 
-                {loginError ? <Text category="s1" status="warning">{loginError}</Text> : null}
-            </View>
-            <View>
-                <Button onPress={onLogin}>התחבר</Button>
-                <View style={{alignSelf: "center", paddingVertical: "5%"}}>
-                    <Text category="h6" appearance="hint">או</Text>
+                    {loginError ? <Text category="s1" status="warning">{loginError}</Text> : null}
                 </View>
-                <Button accessoryLeft={GoogleIcon} status="basic"
-                onPress={() => googleLogin()} disabled={!googleRequest}>התחבר עם חשבון גוגל</Button>
-            </View>
-            <View>
-                <Text>
-                    עדיין אין לך משתמש באפליקציה? <Text status="primary"
-                                                    onPress={() => navigation.navigate('Signup')}>
-                                                        הירשם
-                                                    </Text>
-                </Text>
+                <View style={GlobalStyle.bodyItem}>
+                    <Button onPress={onLogin}>התחבר</Button>
+                    <View style={{alignSelf: "center", paddingVertical: "5%"}}>
+                        <Text category="h6" appearance="hint">או</Text>
+                    </View>
+                    <Button accessoryLeft={GoogleIcon} status="basic"
+                    onPress={() => googleLogin()} disabled={!googleRequest}>התחבר עם חשבון גוגל</Button>
+                </View>
+                <View style={GlobalStyle.bodyItem}>
+                    <Text>
+                        עדיין אין לך משתמש באפליקציה? <Text status="primary"
+                                                        onPress={() => navigation.navigate('Signup')}>
+                                                            הירשם
+                                                        </Text>
+                    </Text>
+                </View>
             </View>
         </Layout>
     );
 };
-
-const styles = StyleSheet.create({
-    pageLayout: {
-        flex: 1,
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        paddingHorizontal: "5%",
-    },
-});

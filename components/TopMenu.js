@@ -11,14 +11,14 @@ const MenuIcon = (props) => (
 );
 
 const SettingsIcon = (props) => (
-    <Icon {...props} name="settings"/>
+    <Icon {...props} name="settings-outline"/>
 );
 
 const LogoutIcon = (props) => (
     <Icon {...props} name="log-out"/>
 );
 
-export default TopMenu = () => {
+export default TopMenu = ({ navigation }) => {
     const [menuVisible, setMenuVisible] = React.useState(false);
     const [showLogoutConfirmation, setShowLogoutConfirmation] = React.useState(false);
 
@@ -38,6 +38,12 @@ export default TopMenu = () => {
     const toggleLogoutAction = () => {
         setMenuVisible(!menuVisible)
         setShowLogoutConfirmation(!showLogoutConfirmation);
+    };
+
+    // go to SettingsScreen when Settings icon is pressed
+    const goToSettingsPage = () => {
+        toggleMenu();
+        navigation.navigate('Settings');
     };
 
     const closeLogoutModal = () => {
@@ -63,6 +69,7 @@ export default TopMenu = () => {
                 title={() => menuItemText("הגדרות")}
                 accessoryLeft={SettingsIcon}
                 style={styles.menuItem}
+                onPress={goToSettingsPage}
                 />
                 <MenuItem
                 title={() => menuItemText("התנתק")}
